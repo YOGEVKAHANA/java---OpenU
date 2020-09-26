@@ -1,0 +1,299 @@
+/**
+ * class Fooditem is check other items in market. she check name, catalogue number,expiry date and more.
+ *
+ * @author Yogev Kahana
+ * @version 14/12/2019
+ */
+public class FoodItem
+{
+    // instance variables - replace the example below with your own
+    private final String _name;
+    private final long _catalogueNumber;
+    private int _quantity;
+    private Date _productionDate;
+    private Date _expiryDate;
+    private final int _minTemperature;
+    private final int _maxTemperature;
+    private int _price;
+    private final String defualutItamName = "Item " ;
+    private final int minNumLenghthCatalouge = 1000;
+    private final int maxNumLenghthCatalouge = 9999;
+    private final int defaultPrice = 1;
+    private final int defaultQuanitity = 0;
+
+    /**
+     * creates a new FoodItem object
+     * @ param :
+     * name - name of food item , catalogueNumber - catalogue number of food item , quantity - quantity of food item
+     * productionDate - production date , expiryDate - expiry date , minTemperature - minimum storage temperature , 
+     * maxTemperature - maximum storage temperature , price - unit price
+     */
+    public FoodItem (String name, long catalogueNumber,int quantity, Date productionDate, 
+    Date expiryDate, int minTemperature, int maxTemperature, int price )
+    {
+        if ( name == null){ // check if string name is empty. 
+            _name =   defualutItamName; // if empty return defuaclt name
+        }
+        else {
+            _name = name; // else , return name of fooditem
+        }
+
+        if (catalogueNumber < minNumLenghthCatalouge  ||  catalogueNumber > maxNumLenghthCatalouge){  // check if number catalogue smalles or larges from min/max num catalouge lenght
+            _catalogueNumber = maxNumLenghthCatalouge;
+        }
+        else{
+            _catalogueNumber = catalogueNumber;
+        }
+
+        if (quantity<0){ //check if quantity smallest from 0 or not
+            quantity =  defaultQuanitity ;
+        }
+        else {
+            _quantity = quantity;
+        }
+        _productionDate = new Date (productionDate); // create dat to prodction
+        if(expiryDate.before (productionDate)){ // check if expiry date before or not
+            _expiryDate = new Date (productionDate.tomorrow())   ;
+        }
+        else {
+            _expiryDate =  new Date (expiryDate ); //create new date to expiry date
+        }
+        if (minTemperature > maxTemperature){ // check if min temperature smellast or biggest fron max temperature
+            _minTemperature   = maxTemperature ;
+            _maxTemperature = minTemperature ;
+        }
+        else{
+            _minTemperature = minTemperature ;
+            _maxTemperature = maxTemperature ;
+        }
+        if ( price < 1) { // check legal price 
+            _price = defaultPrice ;  
+        }
+        else {
+            _price = price;
+        }
+     
+    }
+
+    /**
+     * copy constructor 
+     * @parm : other - the food item to be copied
+     */
+    public FoodItem (FoodItem other)
+    {
+        _name=other.getName();
+        _catalogueNumber = other.getCatalogueNumber();
+        _quantity = other.getQuantity();
+        _productionDate = new Date (other.getProductionDate());
+        _expiryDate = new Date (other.getExpiryDate());
+        _minTemperature = other.getMinTemperature();
+        _maxTemperature = other.getMaxTemperature();
+        _price = other.getPrice();
+
+    }
+
+    /**
+     * check if 2 food items are the same (excluding the quantity values)
+     * @Param other - the food item to compare this food item to
+     * @return true if the food items are the same
+     */
+    public boolean equals(FoodItem other)
+    {
+        boolean sameName = _name.equals(other.getName()); // check if name same to other fooditem
+        boolean sameCatalaougeNumber = _catalogueNumber == other.getCatalogueNumber(); // check if cataluoge number same to other catabluoge
+        boolean sameProductionDate = _productionDate.equals(other.getProductionDate()); // check if production date same to other production date
+        boolean sameExpiryDate = _expiryDate.equals(other.getExpiryDate()); // check if  expiry data same to other expiry date.
+        boolean sameMinTemoperature = _minTemperature == other.getMinTemperature(); // check if min tempe' same to other min tempe'
+        boolean sameMaxTemoperature = _maxTemperature == other.getMaxTemperature(); // check if max tempe' same to other max tempe
+        boolean samePrice = _price ==  other.getPrice(); // check if price same to other price
+        return sameName && sameCatalaougeNumber && sameProductionDate && sameExpiryDate // return true if all the check is same.
+        && sameMinTemoperature && sameMaxTemoperature && samePrice;
+
+    }
+
+    /**
+     * gets the catalogue number
+     *
+     * @return the catalogue number
+     */
+    public long getCatalogueNumber() 
+    {
+        return _catalogueNumber;
+    }
+
+    /**
+     * gets the expiry date
+     * @return the expiry date
+     */
+    public Date getExpiryDate()
+    {
+        return new Date (_expiryDate); 
+    }
+
+    /**
+     * gets the maximum storage temperature
+     * @return the maximum storage temperature
+     */
+    public  int getMaxTemperature()  
+    {
+        return _maxTemperature; 
+    }
+
+    /**
+     * gets the minimum storage temperature
+     * @return the minimum storage temperature
+     */
+    public  int getMinTemperature()   
+    {
+        return _minTemperature; 
+    }
+
+    /**
+     * gets the name
+     * @return the name
+     */
+    public String getName()  
+    {
+        return _name; 
+    }
+
+    /**
+     * gets the unit price
+     * @return the unit price
+     */
+    public int getPrice()  
+    {
+        return _price; 
+    }
+
+    /**
+     * gets the production date
+     * @return the production date
+     */
+    public Date getProductionDate()  
+    {
+        return new Date (_productionDate);
+    }
+
+    /**
+     * gets the quantity
+     * @return the quantity
+     */
+    public  int getQuantity() 
+    {
+        return _quantity; 
+    }
+
+    /**
+     * returns the number of units of products that can be purchased for a given amount
+     * @Param  amount - amount to purchase 
+     * @return the number of units can be purchased
+     */
+    public int howManyItems(int amount) 
+    {
+        int maxItems = amount / _price; // create max item by caclculation
+        maxItems = maxItems <0 ?0 : maxItems;
+        return maxItems <_quantity? maxItems :_quantity; 
+
+    }
+
+    /**
+     * check if this food item is cheaper than other food item
+     * @Param  other - food item to compare this food item to
+     * @return true if this food item is cheaper than other date
+     */
+    public boolean isCheaper(FoodItem other) 
+    {
+        return _price < other.getPrice() ; //check if  food item is cheaper than other food item
+    }
+
+    /**
+     * check if this food item is fresh on the date d
+     * @Param  d - date to check 
+     * @return true if this food item is fresh on the date d
+     */
+    public boolean isFresh(Date d)  
+    {
+        return (getExpiryDate().after(d) || getExpiryDate().equals (d)) && 
+        (getProductionDate().equals(d) || getProductionDate().before(d));  
+    }
+
+    /**
+     * check if this food item is older than other food item
+     * @Param other - food item to compare this food item to 
+     * @return true if this food item is older than other date
+     */
+    public  boolean olderFoodItem(FoodItem other)  
+    {
+        return _productionDate.before(other.getProductionDate());
+    }
+
+    /**
+     *  set the expiry date (only if not before production date )
+     * @Param d - expiry date value to be set
+     */
+    public void setExpiryDate(Date d)   
+    {
+        if ( d.before (_productionDate)){
+            d = _expiryDate ;
+        }
+        else {
+            d = new Date (d);
+        }
+    }
+
+    /**
+     *  set the price (only if positive)
+     *  @Param n - price value to be set
+     */
+    public  void setPrice(int n)    
+    {
+        if (n < 1){
+            n = _price;
+        }
+        else {
+            _price = n;
+        }
+    }
+
+    /**
+     *  set the production date (only if not after expiry date)
+     *  @Param d - production date value to be set
+     */
+    public  void setProductionDate(Date d)    
+    {
+        if ( d.after (_expiryDate)){
+            d= _productionDate;
+        }
+        else {
+            _productionDate = new Date (d);
+        }
+    }
+
+    /**
+     * set the quantity (only if not negative) 
+     * @Param n - the quantity value to be set
+     */
+    public void setQuantity(int n)     
+    {
+        if ( n < 0 ) {
+            n = _quantity;   
+        }
+        else {
+            _quantity = n ; 
+        }
+    }
+
+    /**
+     * returns a String that represents this food item 
+     * @Overrides  toString in class java.lang.Object
+     * return String that represents this food item in the following format:
+     * FoodItem: milk CatalogueNumber: 1234 ProductionDate: 14/12/2019 ExpiryDate: 21/12/2019 Quantity: 3
+     */
+    public String toString()    
+    {
+        return "FootItmem: " + _name + "\t CatalogueNumber: " + _catalogueNumber +
+        " \tProductionDate: " +_productionDate .toString() + "\t ExpiryDate: " + _expiryDate.toString() +
+        " \t Qunatity: " + _quantity;
+    }
+}
