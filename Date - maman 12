@@ -1,0 +1,272 @@
+
+/**
+ * Class date check if legal date, return date, check leap yer and more .
+ *
+ * @author Yogev kahana
+ * @version 14/12/2019
+ */
+public class Date
+{
+    
+    int _day;
+    int _month;
+    int _year;
+    final int minDaysOfMonth =1; // create number min days of month
+    final int minMounthOfYear =1; // create number min days of month
+    final int february =2 ; 
+    final int maxMounthOfYear =12; // create number max days of month
+    final int minYear = 1000; // create number of  min year at program
+    final int maxYear = 9999; // create number of max year at program 
+    final int defacultDay=1; // defacult day
+    final int defaculmonth=1; // defacult month
+    final int defacultYear= 2000; // defacult year
+
+    /**
+     * public Date(int day,int month,int year)
+     * creates a new Date object if the date is valid, otherwise creates the date 1/1/2000 
+     * @param day - the day in the month (1-31)month - the month in the year (1-12)year - the year (4 digits)
+     */
+    public Date(int day, int month, int year)
+    {
+        boolean validDate = (day >= minDaysOfMonth) && (day <=maxDaysOfMonth(month,year))&& 
+            (month >=minMounthOfYear) && (month <=maxMounthOfYear)
+            && (year >= minYear) && (year <= maxYear); // return true if the legal date  or defacult date if not
+
+        if (validDate){
+            _day=day;
+            _month=month;
+            _year=year;
+        }
+        else {
+            _day=defacultDay;
+            _month=defaculmonth;
+            _year=defacultYear;   
+        }
+
+    }
+
+    /**
+     * copy constructor 
+     * @param  other - the date to be copied
+     */
+    public Date (Date other)
+    {
+        _day = other._day;
+        _month = other._month;
+        _year = other._year;
+    }
+
+    /**
+     * gets the day
+     * @return the day
+     */
+    public int getDay ()
+    {
+        return _day ;
+    }
+
+    /**
+     * gets the month 
+     * @return the month
+     */
+    public int getMonth ()
+    {
+        return _month ;
+    } 
+
+    /**
+     * gets the year
+     * @return the year
+     */
+    public int getYear ()
+    {
+        return _year ;
+    }
+
+    /**
+     * sets the day (only if date remains valid) 
+     * @param dayToSet - the day value to be set
+     */
+    public void  setDay (int dayToSet)
+    {
+        if (validDayOfMonth (dayToSet ,_month,_year)){
+            _day = dayToSet;
+        }
+    }
+
+    /**
+     * set the month (only if date remains valid) 
+     * @param monthToSet - the month value to be set
+     */
+    public void setMonth (int monthToSet)
+    {
+        boolean validMonth = (monthToSet >= minMounthOfYear ) && (monthToSet <= maxMounthOfYear); // check if valid of month legal or not
+        if (validDayOfMonth (_day,monthToSet,_year)&& validMonth ==true)
+        {
+            _month = monthToSet ;
+        }
+    }
+
+    /**
+     * sets the year (only if date remains valid) 
+     * @param yearToSet - the year value to be set
+     */
+    public void setYear (int yearToSet)
+    {
+        if (_month == february && leapYear(yearToSet) == false && _day >28) {} // check if not leap year
+        else if (yearToSet >= minYear && yearToSet <= maxYear){  // if is legal year set year
+            _year = yearToSet ;
+        }
+    }
+
+    /**
+     * check if 2 dates are the same
+     * @param other - the date to compare this date to
+     * @return true if the dates are the same
+     */
+    public boolean equals (Date other)
+    {
+        boolean equalDay = _day == other.getDay();
+        boolean equalMonth = _month == other.getMonth();
+        boolean equalYear = _year == other.getYear();
+        return equalDay &&  equalMonth && equalYear;
+
+    }
+
+    /**
+     * check if this date is before other date 
+     * @param  other - date to compare this date to
+     * @return true if this date is before other date
+     */
+    public boolean before (Date other)
+    {
+        int dateDays= calculateDate (getDay(),getMonth (), getYear());
+        int otherDateDays= calculateDate (other.getDay(),other.getMonth (), other.getYear());
+        return dateDays < otherDateDays;
+    }
+
+    /**
+     * check if this date is after other date 
+     * @param  other - date to compare this date to
+     * @return true if this date is after other date
+     */
+    public boolean after (Date other)
+    {
+        return other.before(this);
+    }
+
+    /**
+     * calculates the difference in days between two dates  
+     * @param  other - the date to calculate the difference between
+     * @return the number of days between the dates
+     */
+    public int difference (Date other)
+    {
+        int thisDate= calculateDate (getDay(),getMonth (), getYear());
+        int otherDate= calculateDate (other.getDay(),other.getMonth (), other.getYear());
+        int difference = thisDate - otherDate;
+        return Math.abs (difference);
+    }
+
+    /**
+     * returns a String that represents this date 
+     * @overrides toString in class java.lang.Object
+     * @return String that represents this date in the following format: day/month/year for example: 02/03/1998
+     */
+    public String toString ()
+    {
+        return _day+ "/" + _month + "/" + _year;
+    }
+
+    /**
+     * calculate the date of tomorrow
+     * @return the date of tomorrow
+     */
+    public Date tomorrow (){
+        {
+            if ( validDayOfMonth (getDay() +1 , getMonth(),getYear())){
+                return new Date (getDay() +1 , getMonth(),getYear());
+            }
+            else if (getMonth()+1 > maxMounthOfYear && getYear() +1 >maxYear){
+                return new Date (minDaysOfMonth,minMounthOfYear ,getMonth()+1);   
+            }
+            else if (getMonth() +1 > maxMounthOfYear){
+                return new Date (minDaysOfMonth,minMounthOfYear ,getMonth()+1); 
+            }
+            else
+                return new Date (minDaysOfMonth, getMonth() +1 , getYear());
+        }
+    }
+
+    /**
+     * calculate the day of the week that this date occurs on 0-Saturday 1-Sunday 2-Monday etc.
+     * @return the day of the week that this date occurs on
+     */
+    public int dayInWeek ()
+    {
+        int day,month,year,numOfyears;
+        month = getMonth();
+        year = getYear() % 100;
+        numOfyears = Math.floorDiv(getYear(), 100);
+        if (getMonth() < 3){
+            month = getMonth() +12;
+        }
+        day = (getDay() + (26 * (getMonth() +1))/10 + year +year/4 + numOfyears / 4 -2 * numOfyears ) %7;
+        return day;
+
+    }
+    //////////////////////private methods
+
+    /**
+     * check if the leap year or not 
+     * @param  year - year to compare leap year
+     * @return true if this leap year.
+     */
+    private boolean leapYear (int year)
+    {
+        return (year % 100 == 0) || (year % 4 == 0) || (year % 400 ==0 );
+    }
+
+    /**
+     * calculate the max days in month
+     * @param month,year
+     * @return the max day in month
+     */
+    private int maxDaysOfMonth (int month, int year)
+    {
+        int maxDays = 28 + (month + Math.floorDiv (month,8))  % 2 + 2 % month +2 *Math.floorDiv (1,month);
+        if (month == february  && leapYear (year))
+        { 
+            maxDays++;
+        }
+        return maxDays;
+    }
+
+    /**
+     * check if this date day is valid in month
+     * @param  day,month,year
+     * @return true if day is valid .
+     */
+    private boolean validDayOfMonth (int day ,int month, int year)
+    {
+        if (day <minDaysOfMonth || day > maxDaysOfMonth (month,year)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /**
+     * computes the day number since the beginning of the Christian counting of years
+     * @param  day,month,year
+     * @return computes the day number since the beginning
+     */
+    private int calculateDate ( int day, int month, int year) {
+        if (month < 3) {
+            year--;
+            month = month + 12;
+        }
+        return 365 * year + year/4 - year/100 + year/400 + ((month+1) * 306)/10 + (day - 62);
+    }
+}
