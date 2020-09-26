@@ -1,0 +1,291 @@
+/**         
+ * Maman 13 , queistion 1, 2020a.
+ *
+ * @author Kahana Yogev
+ * @version 28/12/2019 (2020a)
+ */
+public class Stock
+{
+    // instance variables - replace the example below with your own
+    FoodItem [] _stock;
+    int _noOfItems;
+    int maxNumOfItems = 100;
+
+    /**
+     * Constructor for objects of class Stock.Constructor a new Stock with the specified info.
+     */
+    public Stock()
+    {
+        _stock = new FoodItem [maxNumOfItems];
+        _noOfItems = 0 ;
+    }
+
+    /**
+     * public boolean addItem (FoodItem newItem)
+     * 
+     * Parameters: FoodItem
+     * @return  if can add item to the food array.
+     */
+    public boolean addItem(FoodItem newItem)
+    {
+
+        if (_noOfItems == 0){
+            _stock[_noOfItems] = new FoodItem(newItem);//add item.
+            _noOfItems++;
+            return true;
+        }
+        if (newItem == null){
+            return false;// return false if fooditem is empty of content.
+        }
+        if (_noOfItems == maxNumOfItems) {
+            for(int i = 0; i < _noOfItems; i++){   
+                if( _stock[i].getCatalogueNumber() == newItem.getCatalogueNumber() && newItem.getName().equals(_stock[i].getName())){
+                    _stock[i].setQuantity(newItem.getQuantity() + _stock[i].getQuantity());//set new quantity after merge.
+                    return true;
+                }
+
+            }
+        }
+        if (_noOfItems < maxNumOfItems){          
+            for(int j = 0; j < _noOfItems; j++){
+                if( _stock[j].getCatalogueNumber() == newItem.getCatalogueNumber() && newItem.getName().equals(_stock[j].getName())){
+                    _stock[j].setQuantity(newItem.getQuantity() + _stock[j].getQuantity());//set new quantity after merge.
+                    return true;
+                }
+                else
+                {
+                    _stock[_noOfItems] = new FoodItem(newItem);// add newItem.
+                    _noOfItems++;
+                    return true;
+                }
+            }
+            for(int j = 0; j < _noOfItems; j++){
+                if (_stock[j].equals(newItem)){
+                    _stock[j].setQuantity(newItem.getQuantity() + _stock[j].getQuantity());//set new quantity after merge.
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            for(int j = 0; j < _noOfItems; j++){
+                if (_stock[j].getCatalogueNumber() != newItem.getCatalogueNumber()){
+                    _stock[_noOfItems] = new FoodItem(newItem);//add item to array.
+                    _noOfItems++;
+                    return true;
+                }
+            }
+        }
+        arrangement();
+        return true;
+    }
+
+    /**
+     * public int getNumOfItems
+     *
+     * Parameters : number of items.
+     * return summary of number items.
+     */
+    public int getNumOfItems()
+    {
+        return _noOfItems;
+    }
+
+    /**
+     * public String order(int amount)
+     * Parameters :  amount
+     * return  string of items 
+     */
+    public String order(int amount)
+    {
+        String _order = "";
+        for (int i = 0; i < _noOfItems; i++){
+            if (_stock[i].getQuantity() < amount) {
+                _order += _stock[i].getName() +","; //print the list of items to order
+            }
+        }
+        return _order;
+    }
+
+    /**
+     *  public int howMany(int temp).
+     * Parameters :  temp
+     * return   int summry of item will can get   
+     */
+    public int howMany(int temp)
+    { 
+        int sum = 0;
+        int num;
+        if (_noOfItems == 0){
+            return 0;//return 0 if array empty.
+        }
+        if (_noOfItems > 0){
+            for (int z = 0; z < _noOfItems; z++){
+                if (_stock[z].getMinTemperature() <= temp){
+                    num = _stock[z].getQuantity();
+                    sum +=  num;
+                }//combaine all quantities.
+            }
+        }
+        return sum;//return number of items that can be in the given temp.
+    }
+
+    /**
+     *  public void removeAfterDate(Date d)
+     * Parameters :  date 
+     * return delete item of expiry date
+     */
+    public void removeAfterDate(Date d)
+    { FoodItem[] nStock;
+        for (int y = 0; y < _noOfItems -1; y++){
+            if (_stock[y].getExpiryDate().before(d)){
+                for (int index = y; index < _noOfItems - 1; index++){
+                    _stock[index] = _stock[index +1];
+                    _stock[_noOfItems ] = _stock[_noOfItems -1];
+
+                }
+                nStock = new FoodItem[_noOfItems -1];
+                for (int j = y; j< _noOfItems -1; j++){
+                    nStock[j] = _stock[j+1];
+                }
+            }
+        }
+    }
+
+    /**
+     *  public  FoodItem mostExpensive()
+     * 
+     * return expensive item
+     */
+    public FoodItem mostExpensive()
+    {
+        FoodItem _mExspensive = _stock[0];
+        if (_noOfItems == 0){
+            return null; //return null if array empty.
+        }
+        else
+        {
+            for (int k = 0; k <_noOfItems; k++){
+                if (_stock[k].getPrice() > _mExspensive.getPrice()){
+                    return _stock[k];
+                }
+            }
+        }
+        return _stock[0];//return the most exspensive item.
+    }
+
+    /**
+     *  public int howManyPieces()
+     * 
+     * return how meny item have in pieces
+     */
+    public int howManyPieces()
+    {
+        int sum = 0;
+        int num;
+        if (_noOfItems == 0){
+            return 0;
+        }
+        if (_noOfItems > 0){
+            for (int i = 0; i < _noOfItems; i++){
+                num = _stock[i].getQuantity();
+                sum = sum + num;
+            }
+        } 
+        return sum;
+    }
+
+    /**
+     *  public String toString()
+     * Returns a string representation of this Stock in the format
+    FoodItem:    CatalougeNumber:  ProudctionDate:   ExpiryDate:     Quantity:
+     *
+     * @returns A String representation of this fooditem
+     */
+    public String toString()
+    { 
+        String str = "";
+        for (int i = 0; i < _noOfItems; i++){
+            if (_stock[i] != null){
+                str += _stock[i] +"\n";
+
+            }
+        }
+        return str;
+    }
+
+    /**
+     *  public  void updateStock(String[] itemsList)
+     * Parameters : String[] itemsList
+     * return update of stock after sale of item 
+     */
+    public void updateStock(String[] itemsList)
+    {
+        FoodItem [] update_Stock;
+        int newQuantity = 0;
+        for (int i = 0; i < _noOfItems; i++){
+            for (int x = 0; x < itemsList.length; x++){
+                if (_stock[i].getName().equals(itemsList[x])){
+                    newQuantity = _stock[i].getQuantity();
+                    newQuantity--;
+                    _stock[i].setQuantity(newQuantity);
+
+                }
+            }
+        }
+        for (int x = 0; x < _noOfItems;x++){
+            if(newQuantity == 0){
+                update_Stock = new FoodItem [_noOfItems - 1];
+                for(int index = 0; index < x; index++){
+                    update_Stock[index] = _stock[index];
+                }
+                for(int j=x; j < _noOfItems-1; j++){
+                    _stock[j] = update_Stock[j+1];
+
+                }
+            }
+        }
+    }
+
+    /**
+     *  public int getTempOfStock()
+     * 
+     * return range of temperature at stock need to be. 
+     */
+    public int getTempOfStock(){ 
+        int minimumTemp = _stock[0].getMinTemperature();
+        int maximumTemp = _stock[0].getMaxTemperature();
+        if (maximumTemp < minimumTemp){
+            return Integer.MAX_VALUE; //return biggest int.
+        }
+        for (int i = 0; i < _noOfItems; i++){
+            if (minimumTemp < _stock[i].getMinTemperature()) {//check for min temp in array.
+                minimumTemp = _stock[i].getMinTemperature();
+            }
+            if (maximumTemp > _stock[i].getMaxTemperature()){//check for max temp in array
+                maximumTemp = _stock[i].getMaxTemperature();
+
+            }
+        }
+        return minimumTemp;
+    }
+
+    ///////////////private method 
+    /**
+     *  private FoodItem arrangement()
+     * 
+     * return arrangement stock array by number of smallest cataluge number to biggest. 
+     */
+    private FoodItem arrangement()
+    {
+        for (int i=0; i < _noOfItems; i++){
+            for (int j=0; j < _noOfItems; j++){
+                if (_stock[i].getCatalogueNumber() < _stock[j].getCatalogueNumber()){
+                    return _stock[i];
+                }
+            }
+        }
+        return _stock[0];
+    }
+}
+
