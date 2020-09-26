@@ -1,0 +1,161 @@
+
+/**
+ * Maman 14 , queistion1-4, 2020a.
+ *
+ * @author Kahana Yogev
+ * @version 01/02/2020 (2020a)
+ */
+public class Ex14
+{
+    /**
+     ****** question 1 ***** 
+     ***Answer a - The method subStrC return number of substring included  char c ( and not return over a two time following)
+     **parameters: String s, char c
+     **time run O(n) place run O(1)
+     **@return number of substring included  char c 
+     */
+    public static int subStrC(String s, char c) {
+        int counter = 0;
+        for(int i = 0; i < s.length(); i++)
+            if ( s.charAt(i) == c )
+                counter++;
+        if ( counter < 3 )
+            counter  = 0;
+        else
+            counter -= 2;
+        return counter;
+    }
+
+    /**
+     ****** question 1 ***** 
+     *** Answer b- The method subStrMaxC return how many sub strings there are that enclose and end with the C char
+     *** and the content has a maximum K times the char C
+     **parameters: String s, char c, int k
+     **time run O(n) place run O(n)
+     **@return how many sub strings there are that enclose and end with the C char and the content has a maximum K times the char C
+     */
+    public static int subStrMaxC(String s, char c, int k)
+    {
+        int count = 0;
+        int result = 0;
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == c)
+                result++;
+        }
+        for(int i = 0; i < k + 1 && result != 0; i++){
+            count += i;
+            result--;
+        }
+        count += (k + 1) * result;
+        return count;
+
+    }
+
+    /**
+     ****** question 2 ***** 
+
+    /* A static method that replaces any value not equal to zero distance from it to the nearest zero point  
+    /*The time run : O(n). The place run : O (n).  
+     *  public static void zeroDistance (int [] a)
+     * parameters: int array (int [] a) 
+     * 
+     */
+    public static void zeroDistance (int [] a)
+    { 
+        int closest=-1; //if there were no zero's yet
+        int count = 0;
+        for(int i=0;i<a.length;i++) // check which sequence equal to zero  or  distance from it to the nearest zero point
+        {
+            count++;
+            if(a[i]==0 && closest==-1)
+                closest=i;
+            if(a[i]==0)
+                count=0;
+            a[i]=count;
+        }
+        closest = -1;
+        for (int i=a.length-1 ; i>=0 ; i--) //deciding which sequence to apply to the main arrey and how.
+            if (a[i] == 0)                            
+                closest = 0;
+            else if (closest != -1 && a[i] > ++closest) 
+                a[i] = closest;       
+    }
+
+    /**
+     ****** question 3 ***** 
+
+    /* The method accepts as two parameters char strings s,t and returns true whether t passed - transformation from S or not 
+     *  public static boolean isTrans (String s, String t)
+     * parameters: String s, String t.
+     * return true if t passed - transformation
+     */
+    public static boolean isTrans (String s, String t) {
+
+        return isTrans (s, t, 0, 0);
+    }
+
+    /*  private static boolean isTrans (String s, String t, int i, int j)
+    /* @returns true whether t passed - transformation from S or not.   
+    / * 
+     */
+    private static boolean isTrans (String s, String t, int i, int j) { //overloading
+        if (t.length() < s.length()) // base case
+            return false;
+        if (s.charAt(0) != t.charAt(0)) //base case 
+            return false;
+        else if (s.charAt(i) == t.charAt(j)) {
+            if ((j == t.length()-1) && (i == s.length()-1))
+                return true;
+            else if (i == s.length()-1)
+                return (isTrans (s, t, i, ++j));
+            else return (isTrans (s, t, ++i, ++j));
+        }
+        else if (s.charAt(i) != t.charAt(j)) {
+            if (j == t.length()-1)
+                return false;
+            else if (t.charAt(j-1) != t.charAt(j))
+                return false;
+            else return (isTrans (s, t, i, ++j));
+        }
+        return true;
+    }
+
+    /**
+     ****** question 4 ***** 
+
+    /* A method that accepts a 2-D array and returns the number of possible valid paths in the array
+     * 
+     *public static int countPaths (int [][] mat) 
+     * @returns the number of possible valid paths in the array.   
+     * 
+     */
+    public static int countPaths (int [][] mat)
+    {
+
+        return countPaths(mat,0,0);
+
+    }
+
+    /*  private static int countPaths (int [][] mat, int col , int row )
+    /* @returns method helped to discovry how many count paths.   
+    / * 
+     */
+    private static int countPaths (int [][] mat, int col , int row ) { //overloading
+        int maxCol = mat.length-1;
+        int maxRow= mat[0].length-1;
+        if (col == maxCol && row == maxRow) //base case
+            return 1;    
+        else if (col > maxCol || row > maxRow) 
+            return 0;
+        int currentValue = mat[col][row];  // creation of current value
+        int currentIndex = currentValue %10; // creation of current index
+        int currentTens = currentValue /10;   
+        if(currentValue == 0) 
+            return 0;
+        int op1 = countPaths(mat,col + currentTens,row + currentIndex); // check where to going
+        if(currentIndex ==currentTens)
+            return op1;
+        int op2 = countPaths(mat,col + currentIndex,row + currentTens);   // check where to going
+        return op1+ op2;
+    }
+}
