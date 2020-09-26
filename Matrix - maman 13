@@ -1,0 +1,188 @@
+
+/**         
+ * Maman 13 , queistion 2, 2020a.
+ *
+ * @author Kahana Yogev
+ * @version 28/12/2019 (2020a)
+ */
+public class Matrix
+{
+    private int [][] _mat;
+
+    /**
+     * constructs a Matrix from a two-dimenisal array; the dimensions as well as the
+     * values of this Matrix will be the same as the dimensions and values of the two-dimensional array.
+     */
+    public Matrix (int [][]array)
+    {
+        _mat = new int [array.length] [array[0].length];
+        for (int i = 0; i < array.length; i++)
+        {
+            for (int j = 0; j < array[0].length; j++)
+            {
+                _mat[i][j] = array [i] [j];
+            }
+        }
+    }
+
+    /**
+     * Constructorsize1 by size2 Matrix of zeroes.
+     */
+    public Matrix (int size1 , int size2)
+    {
+        _mat = new int [size1] [size2];
+        for (int i = 0; i < size1; i++)
+        {
+            for (int j = 0; j < size2; j++)
+            {
+                _mat[i][j] = 0;
+            }
+        }
+    }
+
+    /**
+     * public Matrix makeNegative ()
+     * paramaters : valus of array.
+     *return matrix negative of valus.
+     */
+    public Matrix makeNegative()
+    {
+        int [][] _makeNegative = new int [_mat.length][_mat[0].length] ;
+        int num ;
+        for (int i = 0; i < _mat.length; i++)
+        {
+            for (int j = 0; j < _mat[0].length; j++)
+            {
+                num = _mat [i] [j];
+                _makeNegative [i] [j] = negative(num) ;
+            }
+        }
+        Matrix makeNegative = new Matrix (_makeNegative);
+        return makeNegative ; 
+    }  
+
+    /**
+     * public Matrix imageFilterAverage()
+     * parametrs :  valus of array .
+     * return matrix with average of neighbor
+     */
+    public Matrix imageFilterAverage() {
+        int[][] _imageFilterAverage = new int [_mat.length][_mat[0].length];
+        for (int i = 0; i < _mat.length; i++) 
+            for (int j = 0; j < _mat[0].length; j++)
+                _imageFilterAverage[i][j] = averageOf( neighbor(i,j) );
+        return new Matrix(_imageFilterAverage);
+    }
+
+    /**
+     * public Matrix rotateClockwise()
+     * parametrs :  valus of array .
+     * return matrix with roate clock wise (90 degrees)
+     */
+    public Matrix rotateClockwise()
+    {
+        int [][] _rotateClockwise = new int [_mat[0].length][_mat.length] ;
+        for (int i = 0 ; i < _mat[0].length ; i++)
+        {
+            for (int j = 0 ; j < _mat.length ; j++)
+            {
+                _rotateClockwise[i] [_mat.length -j -1] = _mat [j][i];
+            }
+        }
+        Matrix rotateClockwise = new Matrix(_rotateClockwise);
+        return rotateClockwise;
+    }
+
+    /**
+     *  public Matrix rotateCounterClockwise()
+     *Returns a string representation of this Matrix in  format
+     * parametrs :  valus of array .
+     * return matrix with roate counter clock wise (90 degrees)
+     */
+    public Matrix rotateCounterClockwise()
+    {
+        int [][] _mat1 = new int [_mat[0].length][_mat.length] ;
+        for (int i = 0 ; i < _mat[0].length ; i++)
+        {
+            for (int j = 0 ; j < _mat.length ; j++)
+            {
+                _mat1 [_mat[0].length -i -1][j] = _mat [j][i];  ;
+            }
+        }
+        Matrix rotaterCounterClock = new Matrix (_mat1);
+        return rotaterCounterClock;
+    }
+
+    /**
+     * public String toString()
+     * 
+     * @returns A String representation of this matrix
+     */
+    public String toString ()
+    {
+        String toString  = "";
+
+        for(int i = 0; i<_mat.length; i++)
+        {
+            for(int j = 0; j<_mat[0].length; j++)
+            {
+                toString += _mat[i][j] + "\t";
+            }
+
+            toString = toString + "\n";
+        }
+
+        return toString;
+    }
+    ///////////////private method 
+    /**
+     * private static int negative()
+     * parametrs :  num
+     * @returns negative a num in array
+     */
+    private static int negative(int num) {
+        if (num >= 0 && num <= 255)
+            num = Math.abs(num - 255);
+        return num;
+    }
+
+    /**
+     *  private int[] neighbor(int iIndex, int jIndex)
+     * parametrs : int iIndex, int jIndex
+     * @returns neighbor of array
+     */
+    private int[] neighbor(int iIndex, int jIndex) {
+        int[] temp = new int[9];
+        int sum = 0;
+
+        for (int i = 0; i < _mat.length;i++)                                // get  Is`
+            for (int j = 0; j< _mat[0].length; j++)                         // get Js`
+                if (Math.abs(iIndex - i) <= 1 && 1 >= Math.abs(jIndex - j)) // checking distance for each (i,j)
+                    temp[sum++] = _mat[i][j];      
+        int[] _mat = new int[sum];  // building results
+        for (int i = 0; i < sum; i++)
+            _mat[i] = temp[i];
+        return _mat;
+    }
+
+    /**
+     *   private int sum(int[] array)
+     * parametrs :int[] array
+     * @returns loops through array of integers and summs them
+     */
+    private int sum(int[] array) {
+        int sum = 0;
+        for (int i = 0; i < array.length; i++)
+            sum += array[i];
+        return sum;  
+    }
+
+    /**
+     * private int averageOf(int[] array)
+     * parametrs :int[] array
+     * @returns average value of a given integers array
+     */
+    private int averageOf(int[] array) {
+        return sum(array) / array.length;
+    }
+}
